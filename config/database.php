@@ -1,6 +1,6 @@
 <?php
 
-return [
+$output = [
 
     /*
     |--------------------------------------------------------------------------
@@ -54,11 +54,11 @@ return [
 
         'mysql' => [
             'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'port'      => '',
-            'database'  => 'database',
-            'username'  => 'root',
-            'password'  => '',
+            'host'      => env('MYSQL_DB_HOST', 'localhost'),
+            'port'      => env('MYSQL_DB_PORT', ''),
+            'database'  => env('MYSQL_DB_DATABASE', 'database'),
+            'username'  => env('MYSQL_DB_USER', 'root'),
+            'password'  => env('MYSQL_DB_PASSWORD', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -125,3 +125,11 @@ return [
     ],
 
 ];
+
+// Check Unix socket in MySQL host
+if (preg_match('/^(.+):(.+$)/', $output['connections']['mysql']['host'], $matches)) {
+    $output['connections']['mysql']['host'] = $matches[1];
+    $output['connections']['mysql']['unix_socket'] = $matches[2];
+}
+
+return $output;
